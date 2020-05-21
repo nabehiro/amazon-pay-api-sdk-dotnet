@@ -11,16 +11,6 @@ namespace Amazon.Pay.API.WebStore.Types
             ChargeAmount = new Price();
         }
 
-        [OnSerializing]
-        internal void OnSerializing(StreamingContext content)
-        {
-            // skip 'chargeAmount' if there wasn't provided anything
-            if (ChargeAmount.Amount == 0 && ChargeAmount.CurrencyCode == null)
-            {
-                ChargeAmount = null;
-            }
-        }
-
         /// <summary>
         /// Payment flow for charging the buyer.
         /// </summary>
@@ -37,6 +27,7 @@ namespace Amazon.Pay.API.WebStore.Types
         /// Transaction amount
         /// </summary>
         [JsonProperty(PropertyName = "chargeAmount")]
+        [JsonConverter(typeof(PaymentDetailsChargeAmountJsonConverter))]
         public Price ChargeAmount { get; internal set; }
 
         /// <summary>
