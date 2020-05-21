@@ -137,10 +137,10 @@ namespace Amazon.Pay.API
             byte[] bytesToSign = Encoding.UTF8.GetBytes(stringToSign);
 
             PemReader pemReader = new PemReader(new StringReader(privateKeyString));
-            AsymmetricCipherKeyPair keyPair = (AsymmetricCipherKeyPair)pemReader.ReadObject();
+            RsaPrivateCrtKeyParameters parameters = (RsaPrivateCrtKeyParameters)pemReader.ReadObject();
 
             PssSigner pssSigner = new PssSigner(new RsaEngine(), new Sha256Digest(), SaltLength, TrailerField);
-            pssSigner.Init(true, new ParametersWithRandom((RsaKeyParameters)keyPair.Private, random));
+            pssSigner.Init(true, new ParametersWithRandom(parameters, random));
             pssSigner.BlockUpdate(bytesToSign, 0, bytesToSign.Length);
 
             byte[] signature = pssSigner.GenerateSignature();
